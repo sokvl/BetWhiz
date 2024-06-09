@@ -1,0 +1,1 @@
+{"vocab_size": 64229, "embedding_dim": 128, "lstm_hidden_dim": 256, "num_classes": 2, "team_vocab_size": 30, "max_len": 50}

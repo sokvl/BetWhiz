@@ -1,0 +1,11 @@
+API/.env
+notebook/
+model/
+API/predictions/__pycache__
+API/Matches/__pycache__
+API/Posts/__pycache__
+API/Twitterion/__pycache__
+API/modules/__pycache__
+AI_Env/
+Scripts/
+Dockerfile
