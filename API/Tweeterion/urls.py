@@ -5,5 +5,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tweets/', include('Posts.urls')),
     path('games/', include('Matches.urls')),
-    path('predict/', include('predictions.urls'))
+    path('predict/', include('predictions.urls')),
+    path('', include('temp_gui.urls'))
 ]

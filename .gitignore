@@ -9,3 +9,5 @@ API/modules/__pycache__
 AI_Env/
 Scripts/
 Dockerfile
+.ipynb_checkpoints/
+Tests.ipynb

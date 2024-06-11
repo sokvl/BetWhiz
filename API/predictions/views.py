@@ -16,6 +16,8 @@ date
 """
 
 class PredictionView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         home_team_name = request.GET.get('home')
         away_team_name = request.GET.get('away')

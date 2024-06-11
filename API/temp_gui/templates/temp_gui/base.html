@@ -1,0 +1,27 @@
+<!-- main/templates/main/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home Page{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    {% block extra_head %} {% endblock %}
+</head>
+<body class="min-h-[100vh] bg-gradient-to-r from-[#121212] via-[#04101A] to-[#1a1625]">
+    <header>
+        <div class="p-4 bg-[#1a1625] text-gray-200 shadow-b-xl">
+            <h1 class="font-['Nunito'] text-3xl font-bold">CurseBreaker</h1>
+        </div>
+    </header>
+    <main >
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+    </footer>
+</body>
+{% block script %}{% endblock %}
+</html>

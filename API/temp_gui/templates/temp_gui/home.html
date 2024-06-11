@@ -1,0 +1,110 @@
+<!-- main/templates/main/home.html -->
+{% extends 'temp_gui/base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block extra_head %}
+    <script>
+   
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/games/games/?discipline=basketball&limit=2&order=desc')
+                .then(response => response.json())
+                .then(data => {
+                    const itemsContainer = document.getElementById('upcoming-events-box');
+                    itemsContainer.innerHTML = data.map(item => `
+                        <div class="item">
+                            <h3 class="font-['Nunito'] font-weight-600 font-gray-500 py-2 border-b">[${item.league.toUpperCase()}] ${item.home_team} vs ${item.away_team} | ${item.game_date}</h3>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => console.error('Error fetching items:', error));
+            fetch('/games/games/?discipline=basketball&limit=10&order=desc')
+                .then(response => response.json())
+                .then(data => {
+                    // Remove the first 2 records
+                    const filteredData = data.slice(2);
+                    const recentEventsContainer = document.getElementById('recent-events-box');
+                    recentEventsContainer.innerHTML = filteredData.map(item => `
+                        <div class="item">
+                            <h3 class="font-['Nunito'] font-weight-600 font-gray-500 py-2 border-b">[${item.league.toUpperCase()}] ${item.home_team} vs ${item.away_team} | ${item.game_date} | Winner: ${item.outcome}</h3>
+                        </div>
+                    `).join('');
+                });
+        });   
+     
+    </script>
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="font-['Nunito'] text-gray-200 bg-gradient-to-r from-[#121212] via-[#04101A] to-[#1a1625] p-4 py-8 w-[100vw]">
+    <div class="flex min-w-full justify-between">
+        <div class="text-center w-2/3">
+            <h1 class="text-2xl"> Predict </h1>
+            <label for="date"  class="mr-2">Date</label>
+            <input type="date" id="date" name="date" required class="p-2 rounded-xl bg-gray-900 focus:outline-gray-700 w-[15em]"><br><br>
+                
+            <label for="home"  class="mr-2">Home</label>
+            <input type="text" id="home" name="home" required class="p-2 rounded-xl bg-gray-900 focus:outline-gray-700 w-[15em]"><br><br>
+                
+            <label for="away" class="mr-2">Away</label>
+            <input type="text" id="away" name="away" required class="p-2 rounded-xl bg-gray-900 focus:outline-gray-700 w-[15em]"><br><br>
+            <button id="req_button" class="bg-gray-900 border-4 border-gray-900 transition hover:border-gray-500 px-8 py-2">Predict</button>
+            <div id="responseContainer" class="mt-6"></div>
+        </div>
+        <div class="py-2 text-center w-1/3 flex flex-col">
+            <div class="border-2 py-2 text-center border-gray-600 rounded-xl">
+                <h1 class="text-2xl">Upcoming events </h1>
+                <div id="upcoming-events-box" class="px-2">
+                    <p class="animate-pulse">Loading...</p>
+                </div>
+            </div>
+            <div class="border-2 py-2 text-center border-gray-600 rounded-xl mt-4">
+                <h1 class="text-2xl">Recent events[in database]</h1>
+                <div id="recent-events-box" class="px-2">
+                    <p class="animate-pulse">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    document.getElementById('req_button').addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log("clicked");
+        
+        const dateInput = document.getElementById('date');
+        const homeInput = document.getElementById('home');
+        const awayInput = document.getElementById('away');
+    
+        const date = dateInput.value;
+        const home = homeInput.value;
+        const away = awayInput.value;
+    
+        const url = `/predict/predict/?home=${encodeURIComponent(home)}&away=${encodeURIComponent(away)}&date=${encodeURIComponent(date)}`;
+        const responseContainer = document.getElementById('responseContainer');
+        responseContainer.innerHTML = `<pre class="animate-pulse">Calculating..</pre>`;
+        
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const prediction = data.prediction; 
+                responseContainer.innerHTML = `<pre>${JSON.stringify(prediction, null, 2)}</pre>`;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                responseContainer.innerHTML = `<p>Error fetching data: ${error.message}</p>`;
+            });
+    });
+</script>
+{% endblock %}
